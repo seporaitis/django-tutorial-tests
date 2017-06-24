@@ -28,7 +28,7 @@ running `tox`:
 ``` shell
 $ tox -- polls.tests.test_views_with_request_factory
 ... output ...
-Ran 6 tests in 0.034s
+Ran 9 tests in 0.030s
 ```
 
 ``` shell
