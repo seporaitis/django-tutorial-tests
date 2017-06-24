@@ -37,6 +37,11 @@ $ tox -- polls.tests.test_views_with_client
 Ran 10 tests in 0.205s
 ```
 
+## Tests
+
+* using `Client`: [polls/tests/test_views_with_client.py](https://github.com/seporaitis/django-tutorial-tests/blob/master/polls/tests/test_views_with_client.py)
+* using `RequestFactory`: [polls/tests/test_views_with_request_factory.py](https://github.com/seporaitis/django-tutorial-tests/blob/master/polls/tests/test_views_with_request_factory.py)
+
 ## More reading:
 
 * [Django test `Client`](https://docs.djangoproject.com/en/dev/topics/testing/tools/)
