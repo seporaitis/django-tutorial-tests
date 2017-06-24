@@ -139,14 +139,6 @@ class VoteTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'], reverse('polls:results', args=(self.question.id,)))
 
-    def test_post_redirect_with_requestfactory(self):
-        url = reverse('polls:vote', args=(self.question.id,))
-        request = self.request_factory.post(url, {'choice': self.choice2.id})
-        response = vote(request, self.question.id)
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['Location'], reverse('polls:results', args=(self.question.id,)))
-
     def test_logged_in_redirect(self):
         # This test is no different from test_post_redirect, but it
         # shows an example with logging in before calling `post`.
