@@ -41,4 +41,3 @@ Ran 10 tests in 0.205s
 
 * [Django test `Client`](https://docs.djangoproject.com/en/dev/topics/testing/tools/)
 * [Django `RequestFactory`](https://docs.djangoproject.com/en/1.11/topics/testing/advanced/#the-request-factory)
-*
