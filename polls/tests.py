@@ -3,9 +3,10 @@ import datetime
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.urls import reverse
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 
 from .models import Choice, Question
+from .views import ResultsView, vote
 
 
 class QuestionMethodTests(TestCase):
@@ -132,6 +133,9 @@ class VoteTests(TestCase):
 
     def setUp(self):
         super().setUp()
+
+        self.request_factory = RequestFactory()
+
         self.question = create_question(question_text='Some question.', days=0)
         self.question.save()
 
@@ -149,18 +153,26 @@ class VoteTests(TestCase):
         )
         self.choice2.save()
 
-    def test_vote_counts(self):
+    def test_vote_counts_with_client(self):
         url = reverse('polls:vote', args=(self.question.id,))
         # follow=True follows the redirect chain so response is the end page
-        response = self.client.post(url, {'choice': self.choice2.pk}, follow=True)
+        response = self.client.post(url, {'choice': self.choice2.id}, follow=True)
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "<li>{} -- 0 votes</li>".format(self.choice1.choice_text))
         self.assertContains(response, "<li>{} -- 1 vote</li>".format(self.choice2.choice_text))
 
-    def test_post_redirect(self):
+    def test_post_redirect_with_client(self):
         url = reverse('polls:vote', args=(self.question.id,))
-        response = self.client.post(url, {'choice': self.choice2.pk})
+        response = self.client.post(url, {'choice': self.choice2.id})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['Location'], reverse('polls:results', args=(self.question.id,)))
+
+    def test_post_redirect_with_requestfactory(self):
+        url = reverse('polls:vote', args=(self.question.id,))
+        request = self.request_factory.post(url, {'choice': self.choice2.id})
+        response = vote(request, self.question.id)
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'], reverse('polls:results', args=(self.question.id,)))
@@ -177,7 +189,7 @@ class VoteTests(TestCase):
         self.assertTrue(logged_in)
 
         url = reverse('polls:vote', args=(self.question.id,))
-        response = self.client.post(url, {'choice': self.choice2.pk})
+        response = self.client.post(url, {'choice': self.choice2.id})
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'], reverse('polls:results', args=(self.question.id,)))
