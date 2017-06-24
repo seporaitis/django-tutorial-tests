@@ -153,11 +153,6 @@ class VoteTests(TestCase):
         )
         self.choice2.save()
 
-    def tearDown(self):
-        self.choice2.delete()
-        self.choice1.delete()
-        self.question.delete()
-
     def test_vote_counts_with_client(self):
         url = reverse('polls:vote', args=(self.question.id,))
         # follow=True follows the redirect chain so response is the end page
