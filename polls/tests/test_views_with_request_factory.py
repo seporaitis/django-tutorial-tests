@@ -1,31 +1,12 @@
-import datetime
-
 from django.utils import timezone
 from django.urls import reverse
-from django.test import TestCase, RequestFactory
 
 from polls.models import Choice, Question
+from polls.tests import base
 from polls.views import IndexView, vote
 
 
-class BaseTestCase(TestCase):
-
-    def setUp(self):
-        super().setUp()
-
-        self.request_factory = RequestFactory()
-
-    def create_question(self, question_text, days):
-        """
-        Creates a question with the given `question_text` and published the
-        given number of `days` offset to now (negative for questions published
-        in the past, positive for questions that have yet to be published).
-        """
-        time = timezone.now() + datetime.timedelta(days=days)
-        return Question.objects.create(question_text=question_text, pub_date=time)
-
-
-class QuestionViewTests(BaseTestCase):
+class QuestionViewTests(base.BaseTestCase):
 
     def test_index_view_with_no_questions(self):
         """
@@ -34,6 +15,7 @@ class QuestionViewTests(BaseTestCase):
         request = self.request_factory.get(reverse('polls:index'))
         response = IndexView.as_view()(request)
 
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No polls are available")
 
     def test_index_view_with_a_past_question(self):
@@ -84,7 +66,7 @@ class QuestionViewTests(BaseTestCase):
         self.assertContains(response, question2.question_text)
 
 
-class VoteTests(BaseTestCase):
+class VoteTests(base.BaseTestCase):
 
     def setUp(self):
         super().setUp()

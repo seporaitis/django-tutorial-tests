@@ -3,7 +3,7 @@ import datetime
 from django.utils import timezone
 from django.test import TestCase
 
-from polls.models import Choice, Question
+from polls.models import Question
 
 
 class QuestionMethodTests(TestCase):
